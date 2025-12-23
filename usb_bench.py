@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import argparse
 import csv
-import os
 import random
 import struct
 import sys
@@ -18,24 +17,13 @@ HEADER_LEN = struct.calcsize(HEADER_FORMAT)
 CRC_FORMAT = ">I"
 CRC_LEN = struct.calcsize(CRC_FORMAT)
 
-DEFAULT_PORT_PAIRS = [
-    ("/dev/ch9121_B2", "/dev/ch9121_A2"),
-    ("/dev/ch9121_A1", "/dev/ch9121_B1"),
-    ("/dev/ttyUSB2", "/dev/ttyUSB3"),
-    ("/dev/ttyUSB4", "/dev/ttyUSB5"),
-]
+DEFAULT_PORT1 = "COM4"
+DEFAULT_PORT2 = "COM6"
 
 
 def _randbytes(rng, n):
     # Python 3.8 compatibility: random.Random.randbytes is 3.9+
     return bytes(rng.getrandbits(8) for _ in range(n))
-
-
-def pick_default_ports():
-    for port1, port2 in DEFAULT_PORT_PAIRS:
-        if os.path.exists(port1) and os.path.exists(port2):
-            return port1, port2
-    return DEFAULT_PORT_PAIRS[0]
 
 
 class Stats:
@@ -291,17 +279,16 @@ def progress_loop(stats, start_time, interval_s, stop_event, csv_writer):
 
 
 def parse_args():
-    default_port1, default_port2 = pick_default_ports()
     parser = argparse.ArgumentParser(description="USB serial throughput/latency benchmark")
     parser.add_argument(
         "--port1",
-        default=default_port1,
-        help=f"First serial port (default: {default_port1})",
+        default=DEFAULT_PORT1,
+        help=f"First serial port (default: {DEFAULT_PORT1})",
     )
     parser.add_argument(
         "--port2",
-        default=default_port2,
-        help=f"Second serial port (default: {default_port2})",
+        default=DEFAULT_PORT2,
+        help=f"Second serial port (default: {DEFAULT_PORT2})",
     )
     parser.add_argument("--direction", choices=["A", "B"], default="A")
     parser.add_argument("--port_tx", help="Explicit TX port (overrides --direction)")
