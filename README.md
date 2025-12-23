@@ -21,8 +21,7 @@ The scripts in `ch9121_tests/` use device names like:
 - `/dev/ttyUSB2`, `/dev/ttyUSB3`
 - `/dev/ttyUSB4`, `/dev/ttyUSB5`
 
-`usb_bench.py` will auto-pick the first pair that exists on the system from
-that list. You can always override with `--port1` and `--port2`.
+You can always select with `--port1` and `--port2`.
 
 ## usb_bench.py (recommended)
 
